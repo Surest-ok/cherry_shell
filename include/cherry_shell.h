@@ -95,9 +95,9 @@ typedef uintptr_t (*cherry_shell_fn8)(uintptr_t a0, uintptr_t a1, uintptr_t a2, 
 int cherry_shell_init(void);
 
 /**
- * Dynamically register a symbol at runtime.
+ * Dynamically register a symbol at runtime (weakly bound for driver decoupling).
  */
-int cherry_shell_register_symbol(const char *name, uintptr_t addr, uint32_t type, const char *desc);
+int cherry_shell_register_symbol(const char *name, uintptr_t addr, uint32_t type, const char *desc) __attribute__((weak));
 
 /**
  * Look up symbol by name.
