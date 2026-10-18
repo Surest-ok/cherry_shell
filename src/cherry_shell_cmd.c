@@ -322,3 +322,18 @@ uintptr_t blackbox_test(void)
     return 0;
 }
 CHERRY_SHELL_EXPORT_SYM(blackbox_test, blackbox_test, "Trigger blackbox flight recorder self-test: blackbox_test()");
+
+extern int blackbox_save_to_file(const char *path) __attribute__((weak));
+
+uintptr_t blackbox_save(const char *path)
+{
+    if (!path) path = "/blackbox.log";
+    if (blackbox_save_to_file) {
+        int r = blackbox_save_to_file(path);
+        kal_printf("blackbox: saved to '%s' (ret=%d)\n", path, r);
+        return (uintptr_t)r;
+    }
+    kal_printf("blackbox: blackbox_save_to_file not available\n");
+    return 1;
+}
+CHERRY_SHELL_EXPORT_SYM(blackbox_save, blackbox_save, "Save flight recorder blackbox dump to VFS file: blackbox_save(path)");
