@@ -305,3 +305,20 @@ uintptr_t dump_mem(uintptr_t addr, uintptr_t len)
     return len;
 }
 CHERRY_SHELL_EXPORT_SYM(dump_mem, dump_mem, "Hex dump memory: dump_mem(addr, len)");
+
+extern void blackbox_dump(void (*print_fn)(const char *fmt, ...)) __attribute__((weak));
+extern bool blackbox_run_self_test(void) __attribute__((weak));
+
+uintptr_t blackbox(void)
+{
+    if (blackbox_dump) blackbox_dump(NULL);
+    return 0;
+}
+CHERRY_SHELL_EXPORT_SYM(blackbox, blackbox, "Dump flight recorder blackbox logs: blackbox()");
+
+uintptr_t blackbox_test(void)
+{
+    if (blackbox_run_self_test) return blackbox_run_self_test() ? 0 : 1;
+    return 0;
+}
+CHERRY_SHELL_EXPORT_SYM(blackbox_test, blackbox_test, "Trigger blackbox flight recorder self-test: blackbox_test()");
